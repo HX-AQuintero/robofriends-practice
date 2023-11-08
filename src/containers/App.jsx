@@ -1,44 +1,53 @@
-import React, { useState, useEffect } from 'react';
-import CardList from '../components/CardList';
-// import ErrorBoundary from '../components/ErrorBoundary';
+import React, { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
-import SearchBox from '../components/SearchBox';
-import Scroll from '../components/Scroll';
+import { connect } from 'react-redux';
+import { setSearchField, requestRobotsApi } from '../redux/actions/actions';
+import { searchRobots, requestRobots } from '../redux/reducers/reducers';
+import CardList from '../components/cardlist-component/CardList';
+// import ErrorBoundary from '../components/errorboundary-component/ErrorBoundary';
+import SearchBox from '../components/searchbox-component/SearchBox';
+import Scroll from '../components/scroll-component/Scroll';
 import './App.css';
 
-const App = () => {
-  const [robots, setRobots] = useState([]);
-  const [searchfield, setSearchfield] = useState('');
+const mapStateToProps = (state) => {
+  return {
+    searchField: state.searchRobots.searchField,
+    robots: state.requestRobots.robots,
+    isPending: state.requestRobots.isPending,
+  };
+};
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onSearchChange: (event) => dispatch(setSearchField(event.target.value)),
+    onRequestRobots: () => dispatch(requestRobotsApi()),
+  };
+};
+
+const App = ({ searchField, robots, isPending, onRequestRobots, onSearchChange }) => {
   useEffect(() => {
-    fetch('https://jsonplaceholder.typicode.com/users')
-      .then((response) => response.json())
-      .then((users) => {
-        setRobots(users);
-      });
+    onRequestRobots();
   }, []);
 
-  const onSearchChange = (event) => {
-    setSearchfield(event.target.value);
-  };
-
-  const filteredRobots = robots.filter((robot) => {
-    return robot.name.toLowerCase().includes(searchfield.toLowerCase());
+  const filteredRobots = robots?.filter((robot) => {
+    return robot.name.toLowerCase().includes(searchField.toLowerCase());
   });
 
-  return !robots.length ? (
-    <h1>Loading</h1>
-  ) : (
+  return (
     <div className='tc'>
       <h1 className='f1'>RoboFriends</h1>
       <SearchBox searchChange={onSearchChange} />
       <Scroll>
-        <ErrorBoundary fallback={<h1>Oooops something went wrong!</h1>}>
-          <CardList robots={filteredRobots} />
-        </ErrorBoundary>
+        {isPending ? (
+          <h1>Loading</h1>
+        ) : (
+          <ErrorBoundary fallback={<h1>Oooops something went wrong!</h1>}>
+            <CardList robots={filteredRobots} />
+          </ErrorBoundary>
+        )}
       </Scroll>
     </div>
   );
 };
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App);
