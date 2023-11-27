@@ -44,7 +44,8 @@ export default defineConfig({
       },
       devOptions: {
         enabled: true
-      }
+      },
+      base: "/robofriends-practice/"
     }),
   ],
 });
