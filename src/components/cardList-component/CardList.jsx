@@ -2,7 +2,6 @@ import React from 'react';
 import Card from '../card-component/Card';
 
 const CardList = ({ robots }) => {
-  // saludar()
   return (
     <div>
       {robots.map((user, i) => {

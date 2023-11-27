@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 import { ErrorBoundary } from 'react-error-boundary';
 import { connect } from 'react-redux';
 import { setSearchField, requestRobotsApi } from '../redux/actions/actions';
-import { searchRobots, requestRobots } from '../redux/reducers/reducers';
-import CardList from '../components/cardlist-component/CardList';
-// import ErrorBoundary from '../components/errorboundary-component/ErrorBoundary';
+import CardList from '../components/cardList-component/CardList';
+import Header from '../components/header-component/Header';
 import SearchBox from '../components/searchbox-component/SearchBox';
 import Scroll from '../components/scroll-component/Scroll';
 import './App.css';
@@ -24,7 +23,13 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-const App = ({ searchField, robots, isPending, onRequestRobots, onSearchChange }) => {
+const App = ({
+  searchField,
+  robots,
+  isPending,
+  onRequestRobots,
+  onSearchChange,
+}) => {
   useEffect(() => {
     onRequestRobots();
   }, []);
@@ -35,7 +40,7 @@ const App = ({ searchField, robots, isPending, onRequestRobots, onSearchChange }
 
   return (
     <div className='tc'>
-      <h1 className='f1'>RoboFriends</h1>
+      <Header />
       <SearchBox searchChange={onSearchChange} />
       <Scroll>
         {isPending ? (

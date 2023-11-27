@@ -5,8 +5,6 @@ import {
   REQUEST_ROBOTS_SUCCESS,
 } from '../action-types/action-types';
 
-import { apiCall } from '../../utils/apiCall';
-
 export const setSearchField = (text) => ({
   type: CHANGE_SEARCHFIELD,
   payload: text,
